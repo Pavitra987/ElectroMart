@@ -1,0 +1,181 @@
+// Colors
+$primary: #198754;
+$dark-green: #12372a;
+$background: #f1f5f9;
+$text-color: #333;
+
+// Common styles
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: $background;
+    min-height: 100vh;
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+// Main container
+.login-container {
+    display: flex;
+    width: 800px;
+    max-width: 95%;
+    min-height: 450px;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+}
+
+// Left section
+.left-section {
+    width: 45%;
+    background: $dark-green;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+
+    .logo {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    p {
+        font-size: 14px;
+        line-height: 1.7;
+        color: #d1e7dd;
+    }
+}
+
+// Right section
+.right-section {
+    width: 55%;
+    padding: 45px 35px;
+
+    h2 {
+        color: $dark-green;
+        margin-bottom: 10px;
+        font-size: 26px;
+    }
+
+    .subtitle {
+        color: #777;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+}
+
+// Input fields
+.input-group {
+    margin-bottom: 20px;
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: $text-color;
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        outline: none;
+
+        &:focus {
+            border-color: $primary;
+        }
+    }
+}
+
+// Login button
+.login-btn {
+    width: 100%;
+    padding: 13px;
+    background: $primary;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+        background: darken($primary, 8%);
+    }
+}
+
+// Error message
+.error {
+    background: #ffe5e5;
+    color: #c62828;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+// Footer
+.footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 12px;
+    color: #888;
+}
+// Admin Panel Heading
+.navbar-heading {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+
+    h4 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        color: #12372a;
+    }
+
+    .navbar-heading-line {
+        width: 35px;
+        height: 2px;
+        background: #a3e635;
+        border-radius: 5px;
+    }
+}
+
+// Responsive design
+@media (max-width: 600px) {
+    .login-container {
+        flex-direction: column;
+    }
+
+    .left-section,
+    .right-section {
+        width: 100%;
+    }
+
+    .left-section {
+        padding: 25px;
+    }
+
+    .right-section {
+        padding: 30px 25px;
+    }
+}

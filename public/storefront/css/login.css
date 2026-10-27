@@ -1,0 +1,299 @@
+/* Login Page */
+body {
+    background: #f4f4f4 !important;
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Figtree', sans-serif;
+}
+
+/* Login Card */
+.simple-login {
+    width: calc(100% - 30px);
+    max-width: 390px;
+    box-sizing: border-box;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+}
+
+/* Logo */
+.login-brand {
+    display: inline-block;
+    margin-bottom: 22px;
+    color: #171717;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    text-decoration: none;
+}
+
+.login-brand span {
+    color: #888;
+}
+
+/* Heading */
+.simple-login h2 {
+    margin-bottom: 7px;
+    color: #171717;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.simple-login .login-subtitle {
+    margin-bottom: 25px;
+    color: #888;
+    font-size: 13px;
+}
+
+/* Input Fields */
+.simple-login .login-field {
+    margin-bottom: 18px;
+}
+
+.simple-login .login-field label {
+    display: block;
+    margin-bottom: 7px;
+    color: #333;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.simple-login .login-field input {
+    display: block;
+    width: 100%;
+    height: 44px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    border: 1px solid #dedede;
+    border-radius: 7px;
+    background: #fff;
+    color: #222;
+    font-size: 13px;
+    outline: none;
+}
+
+.simple-login .login-field input:focus {
+    border-color: #333;
+}
+
+/* Remember Me and Forgot Password */
+.simple-login .login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.simple-login .remember-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #666;
+    font-size: 12px;
+}
+
+.simple-login .remember-option input {
+    accent-color: #171717;
+}
+
+.simple-login .forgot-link {
+    color: #333;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.simple-login .forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* Sign In Button */
+.simple-login .login-submit {
+    width: 100%;
+    height: 43px;
+    border: none;
+    border-radius: 7px;
+    background: #171717;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.simple-login .login-submit:hover {
+    background: #444;
+}
+
+/* Registration Link */
+.simple-login .login-register {
+    margin-top: 22px;
+    color: #888;
+    font-size: 12px;
+    text-align: center;
+}
+
+.simple-login .login-register a {
+    color: #171717;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.simple-login .login-register a:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+.simple-login .login-footer {
+    margin-top: 22px;
+    color: #aaa;
+    font-size: 11px;
+    text-align: center;
+}
+
+/* Validation Errors */
+.simple-login .login-message {
+    margin-bottom: 16px;
+    padding: 10px;
+    border-radius: 6px;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 12px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .simple-login {
+        margin: 20px auto;
+        padding: 25px 20px;
+    }
+}
+/* Compact Registration Page */
+.register-card {
+    width: calc(100% - 30px);
+    max-width: 390px;
+    box-sizing: border-box;
+    margin: 30px auto;
+    padding: 30px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+}
+
+.register-logo {
+    display: inline-block;
+    margin-bottom: 22px;
+    color: #171717;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    text-decoration: none;
+}
+
+.register-logo span {
+    color: #888;
+}
+
+.register-card h2 {
+    margin-bottom: 7px;
+    color: #171717;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.register-subtitle {
+    margin-bottom: 22px;
+    color: #888;
+    font-size: 13px;
+}
+
+.register-field {
+    margin-bottom: 15px;
+}
+
+.register-field label {
+    display: block;
+    margin-bottom: 7px;
+    color: #333;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.register-field input {
+    display: block;
+    width: 100%;
+    height: 42px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    border: 1px solid #dedede;
+    border-radius: 7px;
+    background: #fff;
+    color: #222;
+    font-size: 13px;
+    outline: none;
+}
+
+.register-field input:focus {
+    border-color: #333;
+}
+
+.register-submit {
+    width: 100%;
+    height: 43px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 7px;
+    background: #171717;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.register-submit:hover {
+    background: #444;
+}
+
+.register-login {
+    margin-top: 20px;
+    color: #888;
+    font-size: 12px;
+    text-align: center;
+}
+
+.register-login a {
+    color: #171717;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.register-login a:hover {
+    text-decoration: underline;
+}
+
+.register-footer {
+    margin-top: 20px;
+    color: #aaa;
+    font-size: 11px;
+    text-align: center;
+}
+
+.register-message {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 6px;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 12px;
+}
+
+@media (max-width: 480px) {
+    .register-card {
+        margin: 20px auto;
+        padding: 25px 20px;
+    }
+}
