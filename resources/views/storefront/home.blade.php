@@ -148,9 +148,7 @@
                         laptops and accessories for your everyday life.
                     </p>
 
-                    <a href="#categories" class="hero-btn">
-                        Explore Collections <span>→</span>
-                    </a>
+                   
                 </div>
 
                 <div class="col-md-5 text-center">
@@ -179,9 +177,6 @@
                         new technology and shop with ease.
                     </p>
 
-                    <a href="#categories" class="hero-btn">
-                        Browse Categories <span>→</span>
-                    </a>
                 </div>
 
                 <div class="col-md-5 text-center">
@@ -210,9 +205,7 @@
                         electronics to make every day better.
                     </p>
 
-                    <a href="#products" class="hero-btn">
-                        Shop Products <span>→</span>
-                    </a>
+                   
                 </div>
 
                 <div class="col-md-5 text-center">
@@ -258,9 +251,15 @@
                                 <span class="category-tag">EXPLORE ELECTROMART</span>
                                 <h2>{{ $category->name }}</h2>
                                 <p>{{ $category->description ?? 'Discover our latest products and find the perfect technology for you.' }}</p>
-                                <a href="{{ route('storefront.home', ['category' => $category->id]) }}" class="category-explore-btn">
-                                    Explore  <span>→</span>
-                                </a>
+                               @guest
+    <a href="{{ route('login') }}" class="category-explore-btn">
+        Explore <span>→</span>
+    </a>
+@else
+    <a href="{{ route('register') }}" class="category-explore-btn">
+        Explore <span>→</span>
+    </a>
+@endguest
                             </div>
                             <div class="category-slide-image">
                                 @if($category->image)
@@ -290,10 +289,9 @@
 <section class="product-search-section">
     <div class="container">
 
-        <form action="{{ route('storefront.home') }}"
-              method="GET"
-              class="premium-search-form">
-
+       <form action="{{ route('storefront.home') }}#products"
+      method="GET"
+      class="premium-search-form">
             <div class="search-input-wrapper">
                 <span class="search-symbol">⌕</span>
 

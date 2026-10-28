@@ -132,39 +132,99 @@
 
 @if($product->stock > 0)
 
-    <form action="{{ route('cart.add', $product->id) }}" method="POST">
+  <form action="{{ route('cart.add', $product->id) }}" method="POST">
 
-        @csrf
 
-        <div class="mb-3">
-            <label for="quantity" class="form-label">
-                Quantity
-            </label>
+@csrf
 
-            <input
-                type="number"
-                name="quantity"
-                id="quantity"
-                class="form-control"
-                value="1"
-                min="1"
-                max="{{ $product->stock }}"
-                required
-                style="width: 120px;"
-            >
-        </div>
+<div class="mb-3">
+    <label for="quantity" class="form-label">
+        Quantity
+    </label>
 
-        @auth
-            <button type="submit" class="btn btn-dark">
-                Add to Cart
-            </button>
-        @else
-            <a href="{{ route('login') }}" class="btn btn-dark">
-                Login to Add to Cart
-            </a>
-        @endauth
+    <input
+        type="number"
+        name="quantity"
+        id="quantity"
+        class="form-control"
+        value="1"
+        min="1"
+        max="{{ $product->stock }}"
+        required
+        style="width: 120px;"
+    >
+</div>
 
-    </form>
+@auth
+    <button type="submit" class="btn btn-dark">
+        Add to Cart
+    </button>
+@else
+    <a href="{{ route('login') }}" class="btn btn-dark">
+        Login to Add to Cart
+    </a>
+@endauth
+
+
+</form>
+{{-- Add to Wishlist --}}
+@auth
+
+
+@php
+    $isWishlisted = \App\Models\Wishlist::where('user_id', auth()->id())
+        ->where('product_id', $product->id)
+        ->exists();
+@endphp
+
+<form action="{{ route('wishlist.store', $product->id) }}"
+      method="POST"
+      style="margin-top: 10px;">
+
+    @csrf
+
+    <button type="submit"
+            class="wishlist-btn {{ $isWishlisted ? 'wishlisted' : '' }}">
+
+        <span class="heart">{{ $isWishlisted ? '♥' : '♡' }}</span>
+
+        {{ $isWishlisted ? 'Added to Wishlist' : 'Add to Wishlist' }}
+
+    </button>
+
+</form>
+
+
+@else
+
+
+<a href="{{ route('login') }}"
+   class="wishlist-btn"
+   style="display: inline-block; text-decoration: none; margin-top: 10px;">
+    ♡ Login to Add to Wishlist
+</a>
+
+
+@endauth
+
+<style>
+    .wishlist-btn {
+        background: white;
+        color: #222;
+        border: 1px solid #333;
+        padding: 10px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.2s;
+    }
+
+    .wishlist-btn:hover {
+        background: #222;
+        color: white;
+    }
+</style>
+
 
 @else
 

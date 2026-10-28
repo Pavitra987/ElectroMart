@@ -10,12 +10,7 @@ class CustomerDashboardController extends Controller
 {
     public function index()
     {
-        $products = Product::with('subcategory.category')
-            ->where('status', 'active')
-            ->latest()
-            ->take(8)
-            ->get();
-
+       $products = Product::with('subcategory.category')->latest()->get();
         $categories = Category::where('status', 'active')
             ->get();
 

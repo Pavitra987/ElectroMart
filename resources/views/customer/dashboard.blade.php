@@ -110,38 +110,17 @@ body {
             font-weight: 800;
             letter-spacing: -1.5px;
             white-space: nowrap;
+            
         }
 
         .shopping-logo span {
             color:silver;
         }
 
-        .shopping-search {
-            display: flex;
-            width: 45%;
-            max-width: 570px;
-            border: 1px solid #d8d8d8;
-            border-radius: 4px;
-            overflow: hidden;
-        }
+       
 
-        .shopping-search input {
-            width: 100%;
-            padding: 13px 15px;
-            border: none;
-            outline: none;
-            font-size: 13px;
-        }
-
-        .shopping-search button {
-            border: none;
-            background: grey;
-            color: white;
-            padding: 0 23px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
+        
+       
         .shopping-actions {
             display: flex;
             align-items: center;
@@ -276,19 +255,7 @@ body {
             padding: 15px 5% 35px;
         }
 
-        .section-heading {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 23px;
-        }
-
-        .section-heading h2 {
-            font-size: 23px;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: -0.7px;
-        }
+      
 
         .section-link {
             font-size: 12px;
@@ -296,48 +263,50 @@ body {
             font-weight: 700;
         }
 
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(6, minmax(0, 1fr));
-            gap: 18px;
+        /* Simple horizontal category navigation */
+        .category-section {
+            padding-top: 28px;
+            padding-bottom: 30px;
         }
 
-        .category-card {
-            padding: 22px 10px;
-            background: #f8f8f8;
-            border-radius: 6px;
-            text-align: center;
-            transition: .2s;
-        }
+        
 
-        .category-card:hover {
-            background: #f1ece7;
-            transform: translateY(-3px);
-        }
+       
 
-        .category-image {
-            width: 85px;
-            height: 85px;
-            margin: 0 auto 14px;
-            border-radius: 50%;
-            background: #fff;
+        .category-nav {
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            font-size: 30px;
-        }
-
-        .category-image img {
+            gap: 0;
             width: 100%;
-            height: 100%;
-            object-fit: contain;
+            border-top: 1px solid #e9e9e9;
+            border-bottom: 1px solid #e9e9e9;
+            overflow-x: auto;
+            scrollbar-width: thin;
         }
 
-        .category-card h3 {
+        .category-nav a {
+            flex: 0 0 auto;
+            display: block;
+            padding: 19px 20px;
+            color: #222;
             font-size: 12px;
-            font-weight: 700;
-            margin: 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .35px;
+            white-space: nowrap;
+            transition: color .2s ease, background .2s ease;
+        }
+
+        .category-nav a:hover,
+        .category-nav a:focus-visible {
+            color: #8a6a45;
+            background: #faf8f5;
+            outline: none;
+        }
+
+        .category-nav a + a {
+            border-left: 1px solid #eeeeee;
         }
 
         .product-section {
@@ -462,15 +431,7 @@ body {
                 gap: 18px;
             }
 
-            .shopping-search {
-                order: 3;
-                width: 100%;
-                max-width: none;
-            }
-
-            .category-grid {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
+         
 
             .product-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -540,9 +501,18 @@ body {
                 padding-right: 4%;
             }
 
-            .category-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 12px;
+            .category-section {
+                padding-top: 20px;
+                padding-bottom: 22px;
+            }
+
+            .category-nav {
+                justify-content: flex-start;
+            }
+
+            .category-nav a {
+                padding: 16px 15px;
+                font-size: 11px;
             }
 
             .product-grid {
@@ -589,10 +559,7 @@ body {
             Electro<span>Mart</span>
         </a>
 
-        <form action="{{ route('storefront.home') }}" method="GET" class="shopping-search">
-            <input type="text" name="search" placeholder="Search for laptops, mobiles, accessories...">
-            <button type="submit">SEARCH</button>
-        </form>
+      
 
         <div class="shopping-actions">
 
@@ -620,11 +587,11 @@ body {
 </div>
 
 
+<a href="{{ route('wishlist.index') }}" class="shopping-action">
+    <span class="action-icon">♡</span>
+    <span>Wishlist</span>
+</a>
 
-            <a href="#" class="shopping-action">
-                <span class="action-icon">♡</span>
-                <span>Wishlist</span>
-            </a>
 
            <a href="{{ route('cart.index') }}" class="shopping-action">
     <span class="action-icon">🛒</span>
@@ -641,7 +608,6 @@ body {
         <a href="#categories">Categories</a>
         <a href="#products" class="nav-highlight">Shop Products</a>
         <a href="#offers">Special Offers</a>
-        <a href="#footer">Support</a>
     </nav>
 
     <!-- Hero Banner -->
@@ -667,43 +633,30 @@ body {
 
     </section>
 
-    <!-- Categories -->
-    <section class="shopping-section" id="categories">
+    <!-- Categories: compact horizontal navigation -->
+  <!-- Categories: compact horizontal navigation -->
 
-        <div class="section-heading">
-            <h2>Shop by Category</h2>
-        </div>
+<section class="shopping-section category-section" id="categories">
 
-        <div class="category-grid">
+<nav class="category-nav" aria-label="Shop by category">
 
-            @forelse($categories as $category)
+    @forelse($categories as $category)
+        <a href="#products"
+           class="category-filter"
+           data-category="{{ $category->name }}">
+            {{ $category->name }}
+        </a>
+    @empty
+        <span style="padding: 16px; color: #777;">
+            No categories available.
+        </span>
+    @endforelse
 
-                <a href="#products" class="category-card">
+</nav>
 
-                    <div class="category-image">
 
-                        @if($category->image)
-                            <img src="{{ asset('storage/' . $category->image) }}"
-                                alt="{{ $category->name }}">
-                        @else
-                            <span>📦</span>
-                        @endif
+</section>
 
-                    </div>
-
-                    <h3>{{ $category->name }}</h3>
-
-                </a>
-
-            @empty
-
-                <p>No categories available.</p>
-
-            @endforelse
-
-        </div>
-
-    </section>
 
     <!-- Products -->
     <section class="product-section" id="products">
@@ -719,7 +672,8 @@ body {
 
             @forelse($products as $product)
 
-                <div class="shopping-product">
+               <div class="shopping-product"
+     data-category="{{ $product->subcategory->category->name ?? 'Electronics' }}">
 
                     <a href="{{ route('storefront.product', $product->id) }}">
 
@@ -790,6 +744,45 @@ body {
         </p>
 
     </footer>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
+    const categoryLinks = document.querySelectorAll('.category-filter');
+    const products = document.querySelectorAll('.shopping-product');
+    const productsSection = document.getElementById('products');
+    const heading = productsSection.querySelector('.section-heading h2');
+
+    categoryLinks.forEach(function (link) {
+
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            const selectedCategory = this.dataset.category;
+
+            let visibleCount = 0;
+
+            products.forEach(function (product) {
+
+                if (product.dataset.category === selectedCategory) {
+                    product.style.display = '';
+                    visibleCount++;
+                } else {
+                    product.style.display = 'none';
+                }
+
+            });
+
+            heading.textContent = selectedCategory;
+
+            productsSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
+
+    });
+
+});
+</script>
 </body>
 </html>

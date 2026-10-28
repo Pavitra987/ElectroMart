@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Wishlist;
 
 class Product extends Model
 {
@@ -10,4 +11,8 @@ class Product extends Model
     {
         return $this->belongsTo(Subcategory::class);
     }
+    public function wishlists()
+{
+    return $this->hasMany(Wishlist::class);
+}
 }

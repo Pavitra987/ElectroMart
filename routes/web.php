@@ -8,6 +8,7 @@ use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\CustomerProductController;
+use App\Http\Controllers\WishlistController;
 
 Route::get('/', [StorefrontController::class, 'index'])
     ->name('storefront.home');
@@ -45,6 +46,19 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/products', [CustomerProductController::class, 'index'])
     ->name('products.index');
+
+    
+
+Route::middleware('auth')->group(function () {
+    Route::get('/wishlist', [WishlistController::class, 'index'])
+        ->name('wishlist.index');
+
+    Route::post('/wishlist/{productId}', [WishlistController::class, 'store'])
+        ->name('wishlist.store');
+
+    Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])
+        ->name('wishlist.destroy');
+});
 });
 
 Route::middleware('auth')->group(function () {

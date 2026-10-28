@@ -26,25 +26,7 @@
             color: inherit;
         }
 
-        /* Page Heading */
-        .products-banner {
-            margin: 40px 5% 30px;
-            padding: 40px;
-            background: #f4f1ed;
-            border-radius: 8px;
-        }
-
-        .products-banner h1 {
-            font-size: 34px;
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
-
-        .products-banner p {
-            color: #666;
-            font-size: 15px;
-        }
-
+        
         /* Filter Section */
         .filter-section {
             margin: 0 5% 35px;
@@ -279,6 +261,79 @@
         .pagination-wrapper a:hover {
             background: #eee;
         }
+        .products-navbar {
+    background: #fff;
+    padding: 22px 5%;
+    border-bottom: 1px solid #eee;
+}
+
+.products-navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    max-width: 1500px;
+    margin: auto;
+}
+
+.products-logo {
+    font-size: 30px;
+    font-weight: 800;
+    color: #111;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.products-nav-links,
+.products-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.products-nav-links a {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.products-nav-actions a {
+    text-decoration: none;
+    color: #111;
+}
+
+.nav-login,
+.nav-register {
+    padding: 12px 18px;
+    background: #111;
+    color: #fff !important;
+    border-radius: 5px;
+}
+
+.nav-icon-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-size: 14px;
+}
+
+.nav-icon {
+    font-size: 24px;
+}
+
+@media (max-width: 900px) {
+    .products-navbar-inner {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .products-nav-links,
+    .products-nav-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
 
         /* Responsive */
         @media (max-width: 1100px) {
@@ -360,12 +415,50 @@
 </head>
 
 <body>
+    <header class="products-navbar">
+    <div class="products-navbar-inner">
 
-    <!-- Page Heading -->
-    <section class="products-banner">
-        <h1>Explore All Products</h1>
-        <p>Find the perfect electronics for your everyday needs.</p>
-    </section>
+
+    <a href="{{ route('storefront.home') }}" class="products-logo">
+        ElectroMart
+    </a>
+
+    <nav class="products-nav-links">
+        <a href="{{ route('storefront.home') }}">Home</a>
+        <a href="{{ route('products.index') }}">Shop</a>
+    </nav>
+
+    <div class="products-nav-actions">
+
+        @guest
+            <a href="{{ route('login') }}" class="nav-login">Login</a>
+            <a href="{{ route('register') }}" class="nav-register">Register</a>
+        @else
+            <a href="{{ route('profile.edit') }}" class="nav-icon-link">
+                <span class="nav-icon">♙</span>
+                <span>Account</span>
+            </a>
+        @endguest
+
+        
+<a href="{{ route('wishlist.index') }}" class="nav-icon-link">
+    <span class="nav-icon">♡</span>
+    <span>Wishlist</span>
+</a>
+
+        <a href="{{ route('cart.index') }}" class="nav-icon-link">
+            <span class="nav-icon">🛒</span>
+            <span>Cart</span>
+        </a>
+
+    </div>
+
+</div>
+
+
+</header>
+
+    
 
     <!-- Filters -->
     <section class="filter-section">
