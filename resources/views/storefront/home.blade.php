@@ -1,135 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.customer')
 
-<head>
-    <title>ElectroMart | Online Electronics Store</title>
+@section('title', 'ElectroMart | Online Electronics Store')
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="author" content="ElectroMart">
-    <meta name="description" content="Shop electronics, mobiles, laptops and more at ElectroMart.">
+@section('content')
 
-    <link rel="stylesheet" href="{{ asset('storefront/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('storefront/style.css') }}">
-
-    <link rel="stylesheet" href="{{ asset('storefront/css/electromart.css') }}">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Lato:wght@300;400;700&display=swap"
-          rel="stylesheet">
-
-    <script src="{{ asset('storefront/js/modernizr.js') }}"></script>
-    
-<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-</head>
-
-
-<body>
-
-    <header id="header" class="site-header">
-
-        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
-
-            <div class="container">
-
-                <!-- Logo -->
-                <a class="navbar-brand" href="{{ route('storefront.home') }}">
-                    <span class="fw-bold fs-3 text-success">ElectroMart</span>
-                </a>
-
-                <!-- Mobile Menu Button -->
-                <button class="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarMenu"
-                        aria-controls="navbarMenu"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation">
-
-                    <span class="navbar-toggler-icon"></span>
-
-                </button>
-
-                <!-- Navigation -->
-                <div class="collapse navbar-collapse" id="navbarMenu">
-
-                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-
-                        <li class="nav-item">
-                            <a class="nav-link active"
-                               href="{{ route('storefront.home') }}">
-                                Home
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#categories">
-                                Categories
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#products">
-                                Shop
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#footer">
-                                Contact
-                            </a>
-                        </li>
-
-                    </ul>
-
-
-
-              <div class="d-flex align-items-center gap-2">
-
-    @guest
-        <a href="{{ route('login') }}" class="btn btn-outline-success">
-            Login
-        </a>
-
-        <a href="{{ route('register') }}" class="btn btn-success">
-            Register
-        </a>
-    @endguest
-
-    @auth
-        <a href="{{ route('profile.edit') }}" class="btn btn-outline-success">
-            Profile
-        </a>
-
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="btn btn-outline-danger">
-                Logout
-            </button>
-        </form>
-    @endauth
-
-    <a href="#" class="text-dark fs-4 ms-2" aria-label="Shopping cart">
-        🛒
-    </a>
-
-</div>
-
-                </div>
-
-            </div>
-
-        </nav>
-
-    </header>
 <!-- Hero Section -->
 <!-- Hero Slider -->
 <section class="hero-slider" id="home">
@@ -251,15 +125,10 @@
                                 <span class="category-tag">EXPLORE ELECTROMART</span>
                                 <h2>{{ $category->name }}</h2>
                                 <p>{{ $category->description ?? 'Discover our latest products and find the perfect technology for you.' }}</p>
-                               @guest
-    <a href="{{ route('login') }}" class="category-explore-btn">
-        Explore <span>→</span>
-    </a>
-@else
-    <a href="{{ route('register') }}" class="category-explore-btn">
-        Explore <span>→</span>
-    </a>
-@endguest
+                             <a href="{{ route('products.index', ['category' => $category->id]) }}" class="category-explore-btn">
+    Explore <span>→</span>
+</a>
+
                             </div>
                             <div class="category-slide-image">
                                 @if($category->image)
@@ -371,9 +240,10 @@
                                 Stock: {{ $product->stock }}
                             </p>
 
-<a href="{{ route('storefront.product', $product->id) }}" class="btn btn-dark">
+<a href="{{ route('storefront.product', $product->id) }}" class="btn btn-dark mb-2">
     View Product
 </a>
+
 
                         </div>
 
@@ -395,161 +265,55 @@
 </section>
 <!-- End Products Section -->
 
-<!-- Footer -->
-<footer id="footer" class="bg-dark text-white py-5">
-    <div class="container">
+@endsection
 
-        <div class="row">
-
-            <div class="col-md-4 mb-4">
-                <h3 class="fw-bold text-success">ElectroMart</h3>
-
-                <p class="text-light">
-                    Your one-stop destination for electronics,
-                    gadgets and accessories.
-                </p>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <h5>Quick Links</h5>
-
-                <ul class="list-unstyled">
-                    <li class="mb-2">
-                        <a href="{{ route('storefront.home') }}"
-                           class="text-white text-decoration-none">
-                            Home
-                        </a>
-                    </li>
-
-                    <li class="mb-2">
-                        <a href="#categories"
-                           class="text-white text-decoration-none">
-                            Categories
-                        </a>
-                    </li>
-
-                    <li class="mb-2">
-                        <a href="#products"
-                           class="text-white text-decoration-none">
-                            Products
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <h5>Contact Us</h5>
-
-                <p class="text-light">
-                    Email: support@electromart.com
-                </p>
-
-                <p class="text-light">
-                    Online Electronics Store
-                </p>
-            </div>
-
-        </div>
-
-        <hr class="border-secondary">
-
-        <div class="text-center">
-            <p class="mb-0">
-                &copy; {{ date('Y') }} ElectroMart. All rights reserved.
-            </p>
-        </div>
-
-    </div>
-</footer>
-<!-- End Footer -->
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-
     const slides = document.querySelectorAll('.hero-slide');
     const dots = document.querySelectorAll('.hero-dot');
     const nextButton = document.querySelector('.hero-next');
     const prevButton = document.querySelector('.hero-prev');
 
-    let currentSlide = 0;
-    let sliderInterval;
+    if (slides.length && dots.length && nextButton && prevButton) {
+        let currentSlide = 0;
+        let sliderInterval;
 
-    function showSlide(index) {
-        slides[currentSlide].classList.remove('active');
-        dots[currentSlide].classList.remove('active');
-
-        currentSlide = (index + slides.length) % slides.length;
-
-        slides[currentSlide].classList.add('active');
-        dots[currentSlide].classList.add('active');
-    }
-
-    function nextSlide() {
-        showSlide(currentSlide + 1);
-    }
-
-    function previousSlide() {
-        showSlide(currentSlide - 1);
-    }
-
-    function startAutoSlide() {
-        clearInterval(sliderInterval);
-
-        sliderInterval = setInterval(function () {
-            nextSlide();
-        }, 5000);
-    }
-
-    nextButton.addEventListener('click', function () {
-        nextSlide();
-        startAutoSlide();
-    });
-
-    prevButton.addEventListener('click', function () {
-        previousSlide();
-        startAutoSlide();
-    });
-
-    dots.forEach(function (dot, index) {
-        dot.addEventListener('click', function () {
-            showSlide(index);
-            startAutoSlide();
-        });
-    });
-
-    const slider = document.querySelector('.hero-slider');
-
-    slider.addEventListener('mouseenter', function () {
-        clearInterval(sliderInterval);
-    });
-
-    slider.addEventListener('mouseleave', function () {
-        startAutoSlide();
-    });
-
-    startAutoSlide();
-
-});
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    new Swiper('.categorySwiper', {
-        loop: true,
-        slidesPerView: 1,
-        spaceBetween: 20,
-        autoplay: {
-            delay: 4000,
-            disableOnInteraction: false
-        },
-        pagination: {
-            el: '.category-pagination',
-            clickable: true
-        },
-        navigation: {
-            nextEl: '.category-next',
-            prevEl: '.category-prev'
+        function showSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
         }
-    });
+
+        function startAutoSlide() {
+            clearInterval(sliderInterval);
+            sliderInterval = setInterval(() => showSlide(currentSlide + 1), 5000);
+        }
+
+        nextButton.addEventListener('click', () => { showSlide(currentSlide + 1); startAutoSlide(); });
+        prevButton.addEventListener('click', () => { showSlide(currentSlide - 1); startAutoSlide(); });
+        dots.forEach((dot, index) => dot.addEventListener('click', () => { showSlide(index); startAutoSlide(); }));
+
+        const slider = document.querySelector('.hero-slider');
+        if (slider) {
+            slider.addEventListener('mouseenter', () => clearInterval(sliderInterval));
+            slider.addEventListener('mouseleave', startAutoSlide);
+        }
+        startAutoSlide();
+    }
+
+    if (typeof Swiper !== 'undefined' && document.querySelector('.categorySwiper')) {
+        new Swiper('.categorySwiper', {
+            loop: true,
+            slidesPerView: 1,
+            spaceBetween: 20,
+            autoplay: { delay: 4000, disableOnInteraction: false },
+            pagination: { el: '.category-pagination', clickable: true },
+            navigation: { nextEl: '.category-next', prevEl: '.category-prev' }
+        });
+    }
 });
 </script>
-</body>
-</html>
+@endpush

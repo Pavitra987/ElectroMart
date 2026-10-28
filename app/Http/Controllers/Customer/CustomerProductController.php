@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
@@ -12,25 +11,34 @@ class CustomerProductController extends Controller
 {
     public function index(Request $request)
     {
+        // Get the selected category from the URL
+        $categoryId = $request->query('category', $request->query('category_id'));
+
+        // Fetch all categories
         $categories = Category::all();
 
-        $subcategories = Subcategory::when($request->category_id, function ($query) use ($request) {
-            $query->where('category_id', $request->category_id);
+        // Fetch subcategories belonging to the selected category
+        $subcategories = Subcategory::when($categoryId, function ($query) use ($categoryId) {
+            $query->where('category_id', $categoryId);
         })->get();
 
+        // Fetch and filter products
         $products = Product::with('subcategory.category')
             ->where('status', 'active')
 
-            ->when($request->category_id, function ($query) use ($request) {
-                $query->whereHas('subcategory', function ($q) use ($request) {
-                    $q->where('category_id', $request->category_id);
+            // Filter by category
+            ->when($categoryId, function ($query) use ($categoryId) {
+                $query->whereHas('subcategory', function ($q) use ($categoryId) {
+                    $q->where('category_id', $categoryId);
                 });
             })
 
+            // Filter by subcategory
             ->when($request->subcategory_id, function ($query) use ($request) {
                 $query->where('subcategory_id', $request->subcategory_id);
             })
 
+            // Search by product name
             ->when($request->search, function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->search . '%');
             })
@@ -42,7 +50,8 @@ class CustomerProductController extends Controller
         return view('customer.product-view', compact(
             'products',
             'categories',
-            'subcategories'
+            'subcategories',
+            'categoryId'
         ));
     }
 }

@@ -1,56 +1,23 @@
-<!DOCTYPE html>
 
-<html lang="en">
+@extends('layouts.customer')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section('title', 'My Wishlist')
 
+@section('content')
 
-<title>My Wishlist | ElectroMart</title>
+@php
+    $isGuest = auth()->guest();
+
+    if ($isGuest) {
+        $wishlistProducts = $wishlists;
+    } else {
+        $wishlistProducts = $wishlists->map(function ($wishlist) {
+            return $wishlist->product;
+        })->filter();
+    }
+@endphp
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: Arial, sans-serif;
-        background: #f5f5f5;
-        color: #222;
-    }
-
-    .wishlist-header {
-        background: #171717;
-        color: white;
-        padding: 25px 7%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .logo {
-        font-size: 28px;
-        font-weight: bold;
-        letter-spacing: -1px;
-    }
-
-    .logo span {
-        color: #a6a6a6;
-    }
-
-    .back-link {
-        color: white;
-        text-decoration: none;
-        font-size: 14px;
-    }
-
-    .back-link:hover {
-        color: #bdbdbd;
-    }
-
     .wishlist-container {
         max-width: 1200px;
         margin: 45px auto;
@@ -103,7 +70,7 @@
     .product-image {
         height: 210px;
         padding: 20px;
-        background: #fff;
+        background: white;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -137,7 +104,7 @@
         gap: 10px;
     }
 
-    .btn {
+    .wishlist-container .wishlist-action {
         display: block;
         width: 100%;
         padding: 11px;
@@ -157,6 +124,7 @@
 
     .btn-view:hover {
         background: #444;
+        color: white;
     }
 
     .btn-remove {
@@ -205,6 +173,7 @@
 
     .shop-btn:hover {
         background: #444;
+        color: white;
     }
 
     .success-message {
@@ -216,15 +185,6 @@
         border-radius: 3px;
     }
 
-    .wishlist-footer {
-        background: #171717;
-        color: #aaa;
-        text-align: center;
-        padding: 22px;
-        margin-top: 70px;
-        font-size: 13px;
-    }
-
     @media (max-width: 992px) {
         .wishlist-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -232,14 +192,6 @@
     }
 
     @media (max-width: 550px) {
-        .wishlist-header {
-            padding: 20px;
-        }
-
-        .logo {
-            font-size: 23px;
-        }
-
         .wishlist-container {
             margin-top: 30px;
             padding: 0 15px;
@@ -255,28 +207,15 @@
     }
 </style>
 
-
-</head>
-
-<body>
-
-
-<header class="wishlist-header">
-    <div class="logo">Electro<span>Mart</span></div>
-
-    <a href="{{ url('/dashboard') }}" class="back-link">
-        ← Back to Shop
-    </a>
-</header>
-
 <main class="wishlist-container">
 
     <div class="wishlist-heading">
         <h1>My Wishlist <span style="color:#888;">♡</span></h1>
+
         <p>Your favourite electronics, all in one place.</p>
 
         <span class="wishlist-count">
-            {{ $wishlists->count() }} Saved Products
+            {{ $wishlistProducts->count() }} Saved Products
         </span>
     </div>
 
@@ -286,16 +225,25 @@
         </div>
     @endif
 
-    @if($wishlists->isEmpty())
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if($wishlistProducts->isEmpty())
 
         <div class="empty-wishlist">
             <div class="empty-icon">♡</div>
 
             <h2>Your wishlist is empty</h2>
 
-            <p>You haven't saved any products yet. Explore our collection and find something you love.</p>
+            <p>
+                You haven't saved any products yet.
+                Explore our collection and find something you love.
+            </p>
 
-            <a href="{{ url('/dashboard') }}" class="shop-btn">
+            <a href="{{ route('storefront.home') }}" class="shop-btn">
                 Explore Products →
             </a>
         </div>
@@ -304,53 +252,86 @@
 
         <div class="wishlist-grid">
 
-            @foreach($wishlists as $wishlist)
+            @foreach($wishlistProducts as $product)
 
-                @if($wishlist->product)
+                <div class="wishlist-card">
 
-                    <div class="wishlist-card">
+                    <div class="product-image">
 
-                        <div class="product-image">
+                        @if($product->image)
                             <img
-                                src="{{ asset('storage/' . $wishlist->product->image) }}"
-                                alt="{{ $wishlist->product->name }}"
+                                src="{{ asset('storage/' . $product->image) }}"
+                                alt="{{ $product->name }}"
                             >
+                        @else
+                            <span>No image available</span>
+                        @endif
+
+                    </div>
+
+                    <div class="product-info">
+
+                        <h3>{{ $product->name }}</h3>
+
+                        <div class="product-price">
+                            ₹{{ number_format($product->price, 2) }}
                         </div>
 
-                        <div class="product-info">
+                        <div class="product-actions">
 
-                            <h3>{{ $wishlist->product->name }}</h3>
+                            <a
+                                href="{{ route('storefront.product', $product->id) }}"
+                                class="wishlist-action btn-view"
+                            >
+                                View Product
+                            </a>
 
-                            <div class="product-price">
-                                ₹{{ number_format($wishlist->product->price, 2) }}
-                            </div>
+                            @if($isGuest)
 
-                            <div class="product-actions">
-
-                                <a href="{{ route('storefront.product', $wishlist->product->id) }}"
-                                   class="btn btn-view">
-                                    View Product
-                                </a>
-
-                                <form action="{{ route('wishlist.destroy', $wishlist->id) }}"
-                                      method="POST">
-
+                                <form
+                                    action="{{ route('wishlist.destroy', $product->id) }}"
+                                    method="POST"
+                                >
                                     @csrf
                                     @method('DELETE')
 
-                                    <button type="submit" class="btn btn-remove">
+                                    <button type="submit"
+                                            class="wishlist-action btn-remove">
                                         Remove from Wishlist
                                     </button>
-
                                 </form>
 
-                            </div>
+                            @else
+
+                                @php
+                                    $wishlistRecord = $wishlists->firstWhere(
+                                        'product_id',
+                                        $product->id
+                                    );
+                                @endphp
+
+                                @if($wishlistRecord)
+                                    <form
+                                        action="{{ route('wishlist.destroy', $wishlistRecord->id) }}"
+                                        method="POST"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                                class="wishlist-action btn-remove">
+                                            Remove from Wishlist
+                                        </button>
+                                    </form>
+                                @endif
+
+                            @endif
 
                         </div>
 
                     </div>
 
-                @endif
+                </div>
 
             @endforeach
 
@@ -360,10 +341,4 @@
 
 </main>
 
-<footer class="wishlist-footer">
-    © {{ date('Y') }} ElectroMart. All rights reserved.
-</footer>
-
-
-</body>
-</html>
+@endsection

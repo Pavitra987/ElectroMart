@@ -6,7 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ElectroMart | All Products</title>
+   @extends('layouts.customer')
+
+@section('title', 'My Wishlist')
+
+@section('content')
 
     <style>
         * {
@@ -412,48 +416,7 @@
             }
         }
     </style>
-</head>
-
-<body>
-    <header class="products-navbar">
-    <div class="products-navbar-inner">
-
-
-    <a href="{{ route('storefront.home') }}" class="products-logo">
-        ElectroMart
-    </a>
-
-    <nav class="products-nav-links">
-        <a href="{{ route('storefront.home') }}">Home</a>
-        <a href="{{ route('products.index') }}">Shop</a>
-    </nav>
-
-    <div class="products-nav-actions">
-
-        @guest
-            <a href="{{ route('login') }}" class="nav-login">Login</a>
-            <a href="{{ route('register') }}" class="nav-register">Register</a>
-        @else
-            <a href="{{ route('profile.edit') }}" class="nav-icon-link">
-                <span class="nav-icon">♙</span>
-                <span>Account</span>
-            </a>
-        @endguest
-
-        
-<a href="{{ route('wishlist.index') }}" class="nav-icon-link">
-    <span class="nav-icon">♡</span>
-    <span>Wishlist</span>
-</a>
-
-        <a href="{{ route('cart.index') }}" class="nav-icon-link">
-            <span class="nav-icon">🛒</span>
-            <span>Cart</span>
-        </a>
-
-    </div>
-
-</div>
+<
 
 
 </header>
@@ -478,21 +441,16 @@
             >
 
             <!-- Category -->
-            <select name="category_id" id="category-filter">
+            <select name="category_id" id="category_id">
+    <option value="">All Categories</option>
 
-                <option value="">All Categories</option>
-
-                @foreach($categories as $category)
-                    <option
-                        value="{{ $category->id }}"
-                        {{ request('category_id') == $category->id ? 'selected' : '' }}
-                    >
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-
-            </select>
-
+    @foreach($categories as $category)
+        <option value="{{ $category->id }}"
+            {{ (string) ($categoryId ?? '') === (string) $category->id ? 'selected' : '' }}>
+            {{ $category->name }}
+        </option>
+    @endforeach
+</select>
             <!-- Subcategory -->
             <select name="subcategory_id" id="subcategory-filter">
 
@@ -659,3 +617,4 @@
 
 </body>
 </html>
+@endsection

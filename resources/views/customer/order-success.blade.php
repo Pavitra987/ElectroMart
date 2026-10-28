@@ -5,7 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Order Confirmed | ElectroMart</title>
+    
+@extends('layouts.customer')
+
+@section('title', 'My Wishlist')
+
+@section('content')
+
 
     <link rel="stylesheet" href="{{ asset('storefront/css/bootstrap.min.css') }}">
 
@@ -163,3 +169,4 @@
 </body>
 
 </html>
+@endsection

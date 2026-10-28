@@ -106,6 +106,13 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-menu-item">
+                        <a href="{{ route('admin.complaints.index') }}" class="sidebar-menu-link">
+                            <i class="bi bi-chat-left-text"></i>
+                            <span>Complaints</span>
+                        </a>
+                    </li>
+
                 </ul>
 
             </div>

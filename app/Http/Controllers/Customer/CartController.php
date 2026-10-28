@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Customer;
 
-
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CartItem;
@@ -26,9 +25,38 @@ class CartController extends Controller
             return back()->with('error', 'Requested quantity exceeds available stock.');
         }
 
+        // GUEST CART
+      if (auth()->guest())  {
+
+            $cart = session()->get('cart', []);
+
+            $newQuantity = $quantity;
+
+            if (isset($cart[$id])) {
+                $newQuantity += $cart[$id]['quantity'];
+            }
+
+            if ($newQuantity > $product->stock) {
+                return back()->with('error', 'Not enough stock available.');
+            }
+
+            $cart[$id] = [
+                'product_id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'image' => $product->image,
+                'quantity' => $newQuantity,
+            ];
+
+            session()->put('cart', $cart);
+
+            return back()->with('success', 'Product added to cart successfully!');
+        }
+
+        // LOGGED-IN CUSTOMER CART
         $cart = Cart::firstOrCreate([
-    'user_id' => $request->user()->id,
-]);
+            'user_id' => auth()->id(),
+        ]);
 
         $cartItem = CartItem::where('cart_id', $cart->id)
             ->where('product_id', $product->id)
@@ -58,51 +86,108 @@ class CartController extends Controller
 
         return back()->with('success', 'Product added to cart successfully!');
     }
-  public function index()
-{
-    $cart = \App\Models\Cart::with('items.product')
-        ->where('user_id', request()->user()->id)
-        ->first();
 
-    return view('customer.cart', compact('cart'));
-}
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'quantity' => 'required|integer|min:1',
-    ]);
+    public function index()
+    {
+        // GUEST CART
+      if (auth()->guest())  {
 
-    $cartItem = \App\Models\CartItem::where('id', $id)
-        ->whereHas('cart', function ($query) {
-            $query->where('user_id', request()->user()->id);
-        })
-        ->with('product')
-        ->firstOrFail();
+            $cart = session()->get('cart', []);
 
-    if (!$cartItem->product || $cartItem->product->status !== 'active') {
-        return back()->with('error', 'This product is no longer available.');
+            $products = Product::whereIn('id', array_keys($cart))
+                ->get()
+                ->keyBy('id');
+
+            return view('customer.cart', compact('cart', 'products'));
+        }
+
+        // LOGGED-IN CUSTOMER CART
+        $cart = Cart::with('items.product')
+            ->where('user_id', auth()->id())
+            ->first();
+
+        return view('customer.cart', compact('cart'));
     }
 
-    if ($request->quantity > $cartItem->product->stock) {
-        return back()->with('error', 'Requested quantity exceeds available stock.');
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        // GUEST CART
+      if (auth()->guest())  {
+
+            $cart = session()->get('cart', []);
+
+            if (!isset($cart[$id])) {
+                abort(404);
+            }
+
+            $product = Product::where('status', 'active')
+                ->findOrFail($id);
+
+            $quantity = (int) $request->quantity;
+
+            if ($quantity > $product->stock) {
+                return back()->with('error', 'Requested quantity exceeds available stock.');
+            }
+
+            $cart[$id]['quantity'] = $quantity;
+
+            session()->put('cart', $cart);
+
+            return back()->with('success', 'Cart quantity updated successfully.');
+        }
+
+        // LOGGED-IN CUSTOMER CART
+        $cartItem = CartItem::where('id', $id)
+            ->whereHas('cart', function ($query) {
+              $query->where('user_id', $request->user()->id);
+            })
+            ->with('product')
+            ->firstOrFail();
+
+        if (!$cartItem->product || $cartItem->product->status !== 'active') {
+            return back()->with('error', 'This product is no longer available.');
+        }
+
+        $quantity = (int) $request->quantity;
+
+        if ($quantity > $cartItem->product->stock) {
+            return back()->with('error', 'Requested quantity exceeds available stock.');
+        }
+
+        $cartItem->update([
+            'quantity' => $quantity,
+        ]);
+
+        return back()->with('success', 'Cart quantity updated successfully.');
     }
 
-    $cartItem->update([
-        'quantity' => $request->quantity,
-    ]);
+    public function remove($id)
+    {
+        // GUEST CART
+      if (auth()->guest())  {
 
-    return back()->with('success', 'Cart quantity updated successfully.');
-}
-public function remove($id)
-{
-    $cartItem = \App\Models\CartItem::where('id', $id)
-        ->whereHas('cart', function ($query) {
-            $query->where('user_id', request()->user()->id);
-        })
-        ->firstOrFail();
+            $cart = session()->get('cart', []);
 
-    $cartItem->delete();
+            unset($cart[$id]);
 
-    return back()->with('success', 'Product removed from cart successfully.');
-}
+            session()->put('cart', $cart);
+
+            return back()->with('success', 'Product removed from cart successfully.');
+        }
+
+        // LOGGED-IN CUSTOMER CART
+        $cartItem = CartItem::where('id', $id)
+            ->whereHas('cart', function ($query) {
+                $query->where('user_id', $request->user()->id);
+            })
+            ->firstOrFail();
+
+        $cartItem->delete();
+
+        return back()->with('success', 'Product removed from cart successfully.');
+    }
 }

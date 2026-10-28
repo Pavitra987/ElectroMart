@@ -4,7 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Orders | ElectroMart</title>
+   
+@extends('layouts.customer')
+
+@section('title', 'My Wishlist')
+
+@section('content')
+
 
 
 <style>
@@ -281,3 +287,4 @@
 
 </body>
 </html>
+@endsection

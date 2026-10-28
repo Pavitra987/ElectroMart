@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="{{ asset('storefront/css/login.css') }}">
 
     <!-- Laravel Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
