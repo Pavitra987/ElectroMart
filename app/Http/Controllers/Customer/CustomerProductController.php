@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class CustomerProductController extends Controller
 {
@@ -54,4 +55,13 @@ class CustomerProductController extends Controller
             'categoryId'
         ));
     }
+    public function getSubcategories($categoryId): JsonResponse
+{
+    $subcategories = Subcategory::where('category_id', $categoryId)
+        ->select('id', 'name')
+        ->orderBy('name')
+        ->get();
+
+    return response()->json($subcategories);
+}
 }

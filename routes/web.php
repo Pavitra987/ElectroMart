@@ -9,6 +9,7 @@ use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\CustomerProductController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ContactMessageController;
+use App\Http\Controllers\Customer\AddressController;
 
 
 // ==================== PUBLIC STOREFRONT ====================
@@ -24,6 +25,9 @@ Route::get('/product/{id}', [StorefrontController::class, 'show'])
 // All products
 Route::get('/products', [CustomerProductController::class, 'index'])
     ->name('products.index');
+
+Route::get('/get-subcategories/{categoryId}', [ CustomerProductController::class, 'getSubcategories'])
+->name('customer.getSubcategories');    
 
  // ==================== CUSTOMER CONTACT ====================
 
@@ -80,6 +84,17 @@ Route::middleware('auth')->group(function () {
     // Customer order history
     Route::get('/my-orders', [OrderController::class, 'index'])
         ->name('orders.index');
+
+           Route::post('/addresses', [AddressController::class, 'store'])
+        ->name('addresses.store');
+
+    Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])
+        ->name('addresses.destroy');
+
+    Route::patch('/addresses/{address}/default', [AddressController::class, 'setDefault'])
+        ->name('addresses.default');
+
+        
 
 
     // ==================== CUSTOMER PROFILE ====================

@@ -114,7 +114,7 @@
                 
 
 <!-- Category Slideshow -->
-<section class="category-showcase">
+<section class="category-showcase" id="categories">
     <div class="container">
         <div class="swiper categorySwiper">
             <div class="swiper-wrapper">

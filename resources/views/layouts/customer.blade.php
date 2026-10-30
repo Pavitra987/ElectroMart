@@ -73,13 +73,13 @@
                    
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('contact.create') }}"#footer">
+                        <a class="nav-link" href="{{ route('contact.create') }}">
                             Contact
                         </a>
                     </li>
 
                      <li class="nav-item">
-                        <a class="nav-link" href="{{ route('products.index') }}#footer">
+                        <a class="nav-link" href="{{ route('products.index') }}">
                             products
                         </a>
                     </li>
@@ -107,7 +107,7 @@
                                     type="button"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                Account
+                               {{ Auth::user()->name }}
                             </button>
 
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -120,6 +120,12 @@
                                 <li>
                                     <a class="dropdown-item" href="{{ route('wishlist.index') }}">
                                         Wishlist
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('orders.index') }}">
+                                        My Orders
                                     </a>
                                 </li>
 
@@ -192,10 +198,9 @@
                     </li>
 
                     <li class="mb-2">
-                        <a href="{{ route('storefront.home') }}#categories"
-                           class="text-white text-decoration-none">
-                            Categories
-                        </a>
+                  <a href="{{ route('storefront.home') }}#categories"
+                  class="text-white text-decoration-none">
+                  Categories</a>
                     </li>
 
                     <li class="mb-2">
@@ -212,8 +217,11 @@
                 <h5>Contact Us</h5>
 
                 <p class="text-light">
-                    Email: support@electromart.com
-                </p>
+                 Email:
+              <a href="mailto:support@electromart.com">
+                support@electromart.com
+                          </a>
+                                   </p>
 
                 <p class="text-light">
                     Online Electronics Store

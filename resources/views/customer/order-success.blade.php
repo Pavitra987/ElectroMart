@@ -160,7 +160,7 @@
 
         </div>
 
-        <a href="{{ route('dashboard') }}" class="button">
+        <a href="{{ route('products.index') }}" class="button">
             CONTINUE SHOPPING
         </a>
 

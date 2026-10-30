@@ -13,20 +13,26 @@ use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
 {
-    public function index(Request $request)
-    {
-        $cart = Cart::with('items.product')
-            ->where('user_id', $request->user()->id)
-            ->first();
+  public function index(Request $request)
+{
+    $cart = Cart::with('items.product')
+        ->where('user_id', $request->user()->id)
+        ->first();
 
-        if (!$cart || $cart->items->isEmpty()) {
-            return redirect()
-                ->route('cart.index')
-                ->with('error', 'Your cart is empty.');
-        }
-
-        return view('customer.checkout', compact('cart'));
+    if (!$cart || $cart->items->isEmpty()) {
+        return redirect()
+            ->route('cart.index')
+            ->with('error', 'Your cart is empty.');
     }
+
+    // Get the logged-in customer's saved addresses
+    $addresses = $request->user()
+        ->addresses()
+        ->latest()
+        ->get();
+
+    return view('customer.checkout', compact('cart', 'addresses'));
+}
     public function store(Request $request)
 {
     $validated = $request->validate([

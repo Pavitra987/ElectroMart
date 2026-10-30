@@ -441,32 +441,29 @@
             >
 
             <!-- Category -->
-            <select name="category_id" id="category_id">
+<select name="category_id" id="category-filter">
     <option value="">All Categories</option>
 
     @foreach($categories as $category)
         <option value="{{ $category->id }}"
-            {{ (string) ($categoryId ?? '') === (string) $category->id ? 'selected' : '' }}>
+            {{ (string) request('category_id', request('category')) === (string) $category->id ? 'selected' : '' }}>
             {{ $category->name }}
         </option>
     @endforeach
 </select>
             <!-- Subcategory -->
-            <select name="subcategory_id" id="subcategory-filter">
+<select name="subcategory_id" id="subcategory-filter">
+    <option value="">All Subcategories</option>
 
-                <option value="">All Subcategories</option>
+    @foreach($subcategories as $subcategory)
+        <option value="{{ $subcategory->id }}"
+            data-category="{{ $subcategory->category_id }}"
+            {{ request('subcategory_id') == $subcategory->id ? 'selected' : '' }}>
+            {{ $subcategory->name }}
+        </option>
+    @endforeach
+</select>
 
-                @foreach($subcategories as $subcategory)
-                    <option
-                        value="{{ $subcategory->id }}"
-                        data-category="{{ $subcategory->category_id }}"
-                        {{ request('subcategory_id') == $subcategory->id ? 'selected' : '' }}
-                    >
-                        {{ $subcategory->name }}
-                    </option>
-                @endforeach
-
-            </select>
 
             <button type="submit" class="filter-btn">
                 Apply Filters
@@ -573,47 +570,45 @@
     </section>
 
     <!-- Category and Subcategory Filter -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-            const categorySelect = document.getElementById('category-filter');
-            const subcategorySelect = document.getElementById('subcategory-filter');
+    const categorySelect = document.getElementById('category-filter');
+    const subcategorySelect = document.getElementById('subcategory-filter');
 
-            function filterSubcategories() {
+    if (!categorySelect || !subcategorySelect) {
+        return;
+    }
 
-                const categoryId = categorySelect.value;
-                const selectedSubcategory = subcategorySelect.value;
+    function filterSubcategories() {
 
-                Array.from(subcategorySelect.options).forEach(function (option, index) {
+        const categoryId = categorySelect.value;
 
-                    if (index === 0) {
-                        option.hidden = false;
-                        return;
-                    }
+        Array.from(subcategorySelect.options).forEach(function (option, index) {
 
-                    const belongsToCategory =
-                        option.dataset.category === categoryId;
-
-                    option.hidden = categoryId !== '' && !belongsToCategory;
-                });
-
-                // Clear selected subcategory if it doesn't belong to the chosen category
-                const selectedOption = subcategorySelect.options[subcategorySelect.selectedIndex];
-
-                if (
-                    selectedOption &&
-                    selectedOption.value !== '' &&
-                    selectedOption.hidden
-                ) {
-                    subcategorySelect.value = '';
-                }
+            if (index === 0) {
+                option.hidden = false;
+                return;
             }
 
-            categorySelect.addEventListener('change', filterSubcategories);
-
-            filterSubcategories();
+            option.hidden =
+                categoryId !== '' &&
+                option.dataset.category !== categoryId;
         });
-    </script>
+
+        const selectedOption =
+            subcategorySelect.options[subcategorySelect.selectedIndex];
+
+        if (selectedOption && selectedOption.hidden) {
+            subcategorySelect.value = '';
+        }
+    }
+
+    categorySelect.addEventListener('change', filterSubcategories);
+
+    filterSubcategories();
+});
+</script>
 
 </body>
 </html>

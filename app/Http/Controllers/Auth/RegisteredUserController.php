@@ -33,7 +33,27 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+          'password' => [
+    'required',
+    'string',
+    'min:8',
+    'confirmed',
+    'regex:/[A-Z]/',
+    'regex:/[a-z]/',
+    'regex:/[0-9]/',
+    'regex:/[^a-zA-Z0-9]/',
+],
+    [
+[
+    'password.required' => 'Password is required.',
+    'password.min' => 'Password must contain at least 8 characters.',
+    'password.confirmed' => 'Password confirmation does not match.',
+    'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+]
+
+
+    ]
+
         ]);
 
         $user = User::create([
@@ -46,6 +66,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('storefront.home', absolute: false));
     }
 }

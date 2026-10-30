@@ -1,3 +1,8 @@
+@extends('layouts.customer')
+
+@section('title', 'My Wishlist')
+
+@section('content')
 <x-guest-layout>
 
     <div class="simple-login">
@@ -86,3 +91,4 @@
     </div>
 
 </x-guest-layout>
+@endsection

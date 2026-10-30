@@ -166,13 +166,7 @@
             text-decoration: none;
         }
 
-        .footer {
-            background: #171717;
-            color: white;
-            text-align: center;
-            padding: 25px;
-            font-size: 12px;
-        }
+        
 
         @media (max-width: 850px) {
             .checkout-layout {
@@ -180,23 +174,11 @@
             }
         }
     </style>
-</head>
+
 
 <body>
 
-    <div class="topbar">
-        Welcome to ElectroMart
-    </div>
-
-    <header class="header">
-
-        <a href="{{ route('storefront.home') }}" class="logo">
-            Electro<span>Mart</span>
-        </a>
-
-        <a href="{{ route('cart.index') }}">← Back to Cart</a>
-
-    </header>
+    
 
     <main class="checkout-container">
 
@@ -282,18 +264,38 @@
 
                         </div>
 
-                        <div class="mb-3">
-                            <label for="address" class="form-label">
-                                Delivery Address *
-                            </label>
+                        
+<div class="mb-3">
 
-                            <textarea
-                                name="address"
-                                id="address"
-                                class="form-control"
-                                rows="3"
-                                required>{{ old('address') }}</textarea>
-                        </div>
+    <div style="display: flex; justify-content: space-between;
+                align-items: center; gap: 10px; margin-bottom: 8px;">
+
+        <label for="address" class="form-label" style="margin: 0;">
+            Delivery Address *
+        </label>
+
+        @if(isset($addresses) && $addresses->count() > 0)
+            <button type="button"
+                    id="chooseSavedAddress"
+                    style="background: #203b32; color: white;
+                           border: none; border-radius: 5px;
+                           padding: 8px 12px; font-size: 12px;
+                           cursor: pointer; white-space: nowrap;">
+                + Choose Saved Address
+            </button>
+        @endif
+
+    </div>
+
+    <textarea
+        name="address"
+        id="address"
+        class="form-control"
+        rows="3"
+        required>{{ old('address') }}</textarea>
+
+</div>
+
 
                         <div class="row">
 
@@ -375,74 +377,242 @@
 
                 </div>
 
-                <!-- Order Summary -->
-                <aside>
+            {{-- Order Summary --}}
+<aside>
+    <section class="checkout-box">
 
-                    <section class="checkout-box">
+        <h2 class="box-title">Order Summary</h2>
 
-                        <h2 class="box-title">Your Order</h2>
+        {{-- Products --}}
+        @foreach($cart->items as $item)
 
-                        @foreach($cart->items as $item)
+            @if($item->product)
 
-                            @if($item->product)
+                <div class="order-product">
 
-                                <div class="order-product">
-
-                                    <div>
-                                        <div class="order-product-name">
-                                            {{ $item->product->name }}
-                                        </div>
-
-                                        <div class="text-muted mt-1">
-                                            Quantity: {{ $item->quantity }}
-                                        </div>
-                                    </div>
-
-                                    <strong>
-                                        ₹{{ number_format($item->product->price * $item->quantity, 2) }}
-                                    </strong>
-
-                                </div>
-
-                            @endif
-
-                        @endforeach
-
-                        <div class="order-total">
-
-                            <span>Total</span>
-
-                            <span>
-                                ₹{{ number_format($cart->items->sum(function ($item) {
-                                    return $item->product
-                                        ? $item->product->price * $item->quantity
-                                        : 0;
-                                }), 2) }}
-                            </span>
-
+                    <div>
+                        <div class="order-product-name">
+                            {{ $item->product->name }}
                         </div>
 
-                        <button type="submit" class="place-order-button">
-                            PLACE ORDER
-                        </button>
+                        <div class="text-muted mt-1">
+                            Quantity: {{ $item->quantity }}
+                        </div>
+                    </div>
 
-                        <a href="{{ route('cart.index') }}" class="back-link">
-                            ← Return to Cart
-                        </a>
+                    <strong>
+                        ₹{{ number_format($item->product->price * $item->quantity, 2) }}
+                    </strong>
 
-                    </section>
+                </div>
 
-                </aside>
+            @endif
+
+        @endforeach
+
+        @php
+            $subtotal = $cart->items->sum(function ($item) {
+                return $item->product
+                    ? $item->product->price * $item->quantity
+                    : 0;
+            });
+
+            $gstRate = 5;
+            $gstAmount = $subtotal * $gstRate / 100;
+
+            $deliveryFee = 50;
+
+            $grandTotal = $subtotal + $gstAmount + $deliveryFee;
+        @endphp
+
+        {{-- Price Breakdown --}}
+        <div style="margin-top: 20px;">
+
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                <span>Subtotal</span>
+                <strong>₹{{ number_format($subtotal, 2) }}</strong>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                <span>GST ({{ $gstRate }}%)</span>
+                <strong>₹{{ number_format($gstAmount, 2) }}</strong>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                <span>Delivery Fee</span>
+                <strong>₹{{ number_format($deliveryFee, 2) }}</strong>
+            </div>
+
+        </div>
+
+        {{-- Grand Total --}}
+        <div class="order-total"
+             style="border-top:1px solid #ddd; padding-top:20px;">
+
+            <span>Grand Total</span>
+
+            <span>
+                ₹{{ number_format($grandTotal, 2) }}
+            </span>
+
+        </div>
+
+        <button type="submit" class="place-order-button">
+            PLACE ORDER
+        </button>
+
+        <a href="{{ route('cart.index') }}" class="back-link">
+            ← Return to Cart
+        </a>
+
+    </section>
+</aside>
 
             </div>
 
         </form>
+    
+{{-- Saved Address Popup --}}
+@if(isset($addresses) && $addresses->count() > 0)
+
+    <div id="savedAddressModal"
+         style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+                z-index:9999; align-items:center; justify-content:center; padding:20px;">
+
+        <div style="background:white; width:100%; max-width:600px; max-height:80vh;
+                    overflow-y:auto; border-radius:10px; padding:25px;">
+
+            <div style="display:flex; justify-content:space-between;
+                        align-items:center; margin-bottom:20px;">
+
+                <h3 style="margin:0; color:#203b32;">Choose Saved Address</h3>
+
+                <button type="button"
+                        id="closeAddressModal"
+                        style="border:none; background:none; font-size:26px;
+                               cursor:pointer; color:#555;">
+                    &times;
+                </button>
+
+            </div>
+
+            @foreach($addresses as $address)
+
+                <div style="border:1px solid #ddd; border-radius:8px;
+                            padding:16px; margin-bottom:15px;">
+
+                    <div style="display:flex; justify-content:space-between;
+                                align-items:center; gap:10px; flex-wrap:wrap;">
+
+                        <strong style="font-size:16px;">
+                            {{ $address->label }}
+                        </strong>
+
+                        @if($address->is_default)
+                            <span style="background:#e5f4eb; color:#203b32;
+                                         padding:4px 8px; border-radius:4px;
+                                         font-size:12px;">
+                                Default
+                            </span>
+                        @endif
+
+                    </div>
+
+                    <p style="margin:10px 0 5px;">
+                        {{ $address->recipient_name }}
+                    </p>
+
+                    <p style="margin:5px 0; color:#666;">
+                        {{ $address->phone }} | {{ $address->email }}
+                    </p>
+
+                    <p style="margin:5px 0 15px; color:#666;">
+                        {{ $address->address_line }},
+                        {{ $address->city }},
+                        {{ $address->state }} -
+                        {{ $address->postal_code }}
+                    </p>
+
+                    <button
+                        type="button"
+                        class="use-saved-address"
+                        data-name="{{ $address->recipient_name }}"
+                        data-phone="{{ $address->phone }}"
+                        data-email="{{ $address->email }}"
+                        data-address="{{ $address->address_line }}"
+                        data-city="{{ $address->city }}"
+                        data-state="{{ $address->state }}"
+                        data-postal="{{ $address->postal_code }}"
+                        style="background:#203b32; color:white; border:none;
+                               border-radius:5px; padding:10px 16px;
+                               cursor:pointer;">
+
+                        Use This Address
+
+                    </button>
+
+                </div>
+
+            @endforeach
+
+        </div>
+
+    </div>
+
+@endif
 
     </main>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-    <footer class="footer">
-        © {{ date('Y') }} ElectroMart. All rights reserved.
-    </footer>
+    const modal = document.getElementById('savedAddressModal');
+    const openButton = document.getElementById('chooseSavedAddress');
+    const closeButton = document.getElementById('closeAddressModal');
+
+    if (!modal || !openButton || !closeButton) {
+        return;
+    }
+
+    // Open popup
+    openButton.addEventListener('click', function () {
+        modal.style.display = 'flex';
+    });
+
+    // Close popup
+    closeButton.addEventListener('click', function () {
+        modal.style.display = 'none';
+    });
+
+    // Close popup when clicking outside
+    modal.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Select an address and fill the checkout form
+    document.querySelectorAll('.use-saved-address').forEach(function (button) {
+
+        button.addEventListener('click', function () {
+
+            document.getElementById('recipient_name').value = this.dataset.name;
+            document.getElementById('phone').value = this.dataset.phone;
+            document.getElementById('email').value = this.dataset.email;
+            document.getElementById('address').value = this.dataset.address;
+            document.getElementById('city').value = this.dataset.city;
+            document.getElementById('state').value = this.dataset.state;
+            document.getElementById('postal_code').value = this.dataset.postal;
+
+            modal.style.display = 'none';
+
+        });
+
+    });
+
+});
+</script>
+
+
 
 </body>
 
